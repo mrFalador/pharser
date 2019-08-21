@@ -11,6 +11,8 @@ import org.json.JSONObject
 import java.io.IOException
 import kotlin.collections.ArrayList
 import okhttp3.*
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +31,11 @@ class MainActivity : AppCompatActivity() {
             progress.visibility = View.VISIBLE
             listView_details = findViewById<ListView>(R.id.listView) as ListView
             run("https://financialmodelingprep.com/api/v3/stock/actives")
+        }
+
+        pharse_button.setOnClickListener {
+            progress.visibility = View.VISIBLE
+            tobd("https://financialmodelingprep.com/api/v3/stock/actives")
         }
     }
 
@@ -67,13 +74,35 @@ class MainActivity : AppCompatActivity() {
                     val obj_adapter: CustomAdapter
                     obj_adapter = CustomAdapter(applicationContext, arrayList_details)
                     listView_details.adapter = obj_adapter
+                    progress.visibility = View.GONE
                 }
-                progress.visibility = View.GONE
+
             }
         })
     }
 
-    fun Pharse(view: View){
+    fun tobd(url: String){
+        progress.visibility = View.VISIBLE
+        val request = Request.Builder()
+            .url(url)
+            .build()
 
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                progressBar.visibility = View.GONE
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                var str_response = response.body()!!.string()
+                val json_contact: JSONObject = JSONObject(str_response)
+                var jsonarray_info: JSONArray = json_contact.getJSONArray("mostActiveStock")
+                var i:Int = 0
+                var size:Int = jsonarray_info.length()
+                for (i in 0.. size -1){
+                    var json_objectdetail:JSONObject=jsonarray_info.getJSONObject(i)
+                    var model:Model= Model();
+
+                }
+        })
     }
 }

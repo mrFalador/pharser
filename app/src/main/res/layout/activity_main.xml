@@ -8,7 +8,6 @@
         tools:context=".MainActivity" android:background="?attr/colorBackgroundFloating">
     <Button
             android:text="Pharse"
-            android:onClick="Pharse"
             android:layout_width="150dp"
             android:layout_height="45dp"
             android:id="@+id/pharse_button" android:layout_marginBottom="52dp"

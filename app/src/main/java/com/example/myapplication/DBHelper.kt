@@ -7,21 +7,21 @@ import android.database.sqlite.SQLiteConstraintException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
-import androidx.core.content.contentValuesOf
+
 
 import java.util.ArrayList
 
-class DBHelper(context: Context) {
-    fun onCreate(db: SQLiteDatabase){
+class DBHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+    override fun onCreate(db: SQLiteDatabase){
         db.execSQL(SQL_CREATE_ENTERIES)
     }
 
-    fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int){
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int){
         db.execSQL(SQL_DELETE_ENTRIES)
         onCreate(db)
     }
 
-    fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int){
+    override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int){
         onUpgrade(db, oldVersion, newVersion)
     }
 

@@ -13,6 +13,7 @@ import kotlin.collections.ArrayList
 import okhttp3.*
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.view.ViewDebug
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,11 +22,15 @@ class MainActivity : AppCompatActivity() {
     var arrayList_details:ArrayList<Model> = ArrayList()
     val client = OkHttpClient()
 
+    lateinit var DBHelper : DBHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         progress = findViewById(R.id.progressBar)
         progress.visibility = View.GONE
+
+        DBHelper = DBHelper(this)
 
         show_button.setOnClickListener {
             progress.visibility = View.VISIBLE
@@ -96,13 +101,20 @@ class MainActivity : AppCompatActivity() {
                 var str_response = response.body()!!.string()
                 val json_contact: JSONObject = JSONObject(str_response)
                 var jsonarray_info: JSONArray = json_contact.getJSONArray("mostActiveStock")
-                var i:Int = 0
-                var size:Int = jsonarray_info.length()
-                for (i in 0.. size -1){
-                    var json_objectdetail:JSONObject=jsonarray_info.getJSONObject(i)
-                    var model:Model= Model();
+                var i: Int = 0
+                var size: Int = jsonarray_info.length()
+                for (i in 0..size - 1) {
+                    var json_objectdetail: JSONObject = jsonarray_info.getJSONObject(i)
+                    var model: Model = Model();
+                    model.companyName = json_objectdetail.getString("companyName")
+                    model.price = json_objectdetail.getString("price")
+                    var id = model.ticker
+                    var company = model.companyName
+                    var price = model.price
+                    var result = DBHelper.insertCompany(CompanyModel(id = id, company = company, price = price))
 
                 }
+            }
         })
     }
 }
